@@ -30,8 +30,12 @@ public class ThreadLocalDemo {
     private static class InnerClass {
 
         public void add(String newStr) {
-            StringBuilder str = Counter.counter.get();
-            Counter.counter.set(str.append(newStr));
+            //方法1
+//            StringBuilder str = Counter.counter.get();
+//            Counter.counter.set(str.append(newStr));
+
+            // 方法2，等价，取出sb引用类型直接append
+            Counter.counter.get().append(newStr);
         }
 
         public void print() {
@@ -55,6 +59,10 @@ public class ThreadLocalDemo {
     private static class Counter {
 
         private static ThreadLocal<StringBuilder> counter = new ThreadLocal<StringBuilder>() {
+            /**
+             *  父类为public 方法，且默认返回 null，这里重载ThreadLocal的initialValue
+             * @return
+             */
             @Override
             protected StringBuilder initialValue() {
                 return new StringBuilder();
